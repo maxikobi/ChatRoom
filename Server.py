@@ -1,40 +1,53 @@
 from threading import Thread
 import socket
-import threading
 
 HOST = '0.0.0.0' 
 PORT = 8200
 clients = []
+names = []
 
+def client_name(client):
+    index = clients.index(client)
+    return names[index]
+
+def disconnect(client):
+    name = client_name(client)
+    broadcast(name + " has left the chat", client)
+    clients.remove(client)
+    names.remove(name)
+    
+def broadcast_all(message):
+    broadcast(message, None)
+    
 def broadcast(message, sender):
+    print(message)
     for client in clients:
         if client == sender:
             continue
         client.send(message.encode())
-        
-
     
 def client_listener(client):
     with client:
+        name = client.recv(1024).decode()
+        broadcast(name + " has joined the chat!", client)
+        names.insert(clients.index(client), name)
         while True:
             try:
                 data = client.recv(1024)
                 if not data:
-                    clients.remove(client)
-                    break
-            
-                name = data.decode().split("~")[0]
-                content = data.decode().split("~")[1]
-                if content == "end":
-                    print(name + " has left the chat")
-                    clients.remove(client)
+                    disconnect(client)
                     break
                 
+                content = data.decode()
+                if content == "end":
+                    disconnect(client)
+                    break
+                
+                name = client_name(client)
                 message = f"{name} said: {content}";
-                print(message)
                 broadcast(message, client)
             except:
-                print("user left")
+                disconnect(client)
                 break
 
 def start():
