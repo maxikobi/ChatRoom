@@ -29,8 +29,10 @@ def client_listener(client):
                     print(name + " has left the chat")
                     clients.remove(client)
                     break
-            
-                broadcast(f"{name} said: {content}", client)
+                
+                message = f"{name} said: {content}";
+                print(message)
+                broadcast(message, client)
             except:
                 print("user left")
                 break
