@@ -5,12 +5,10 @@ HOST = '172.16.0.124'
 PORT = 8200
 connection = None
 connected = False
-name = input("Enter Name: ")
 
 def send_message(message):
     if not connected: return
-    data = name + "~" + message
-    connection.send(data.encode())
+    connection.send(message.encode())
     
 
 def console_input():
@@ -19,6 +17,8 @@ def console_input():
         if not connected:
             break
         send_message(inp)
+        if inp == "end":
+            break
         
 def start():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
@@ -32,6 +32,7 @@ def start():
         global connection, connected
         connection = sock
         connected = True
+        send_message(input("Enter Name: "))
         t = threading.Thread(target=console_input)
         t.start()
         
@@ -44,6 +45,6 @@ def start():
                 print("server has closed the chat")
                 connected = False
                 break
-            print(f"Server Said: {data.decode( )}")
+            print(data.decode( ))
             
 start()
