@@ -54,6 +54,7 @@ def start():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
         print("server is running!")
+        print("ipv4: " + socket.gethostbyname(socket.gethostname()))
 
         while True:
             s.listen()
