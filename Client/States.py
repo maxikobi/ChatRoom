@@ -23,7 +23,7 @@ class try_connect_state:
         pass
     
     def timeout(self):
-        Graphics.log("couldn't connect! connection timed out!")
+        Graphics.log("Couldn't connect! Connection timed out!")
         
     def connected(self):
         Graphics.log("Connected")

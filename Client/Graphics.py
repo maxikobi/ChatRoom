@@ -8,13 +8,13 @@ TEXT_COLOR = "#EAECEE"
  
 FONT = "Helvetica 14"
 FONT_BOLD = "Helvetica 13 bold"
- 
+
 def log(text):
     txt_log.config(state=NORMAL)
     txt_log.insert(END, "\n" + text)
     txt_log.config(state=DISABLED)
 
-def send():
+def send(event=None):
     if not (ent_input.get().isspace() or ent_input.get() == ""):
         StateMachine.current_state.user_input(ent_input.get())
         
@@ -35,9 +35,9 @@ def window_thread():
     window.title("Chat Room")
     window.columnconfigure(0, weight=1)
     window.protocol("WM_DELETE_WINDOW", on_closing)
+    window.bind('<Return>', send)
 
-    lbl_welcome = Label(window, bg=BG_COLOR, fg=TEXT_COLOR, text="Welcome", font=FONT_BOLD, pady=10, width=20, height=1).grid(
-        row=0)
+    lbl_welcome = Label(window, bg=BG_COLOR, fg=TEXT_COLOR, text="Welcome", font=FONT_BOLD, pady=10, width=20, height=1).grid(row=0)
     
     global txt_log
     txt_log = Text(window, bg=BG_COLOR, fg=TEXT_COLOR, font=FONT, width=60)
@@ -49,8 +49,7 @@ def window_thread():
     ent_input = Entry(window, bg="#2C3E50", fg=TEXT_COLOR, font=FONT, width=55)
     ent_input.grid(row=2, column=0)
  
-    btn_send = Button(window, text="Send", font=FONT_BOLD, bg=BG_GRAY,
-                  command=send).grid(row=2, column=1)
+    btn_send = Button(window, text="Send", font=FONT_BOLD, bg=BG_GRAY, command=send).grid(row=2, column=1)
     
     window.mainloop()
     
